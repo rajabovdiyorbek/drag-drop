@@ -1,19 +1,21 @@
 <template>
 <div class="container">
-    <draggable v-model="myArray" :options="dragOptions" @start="onDragStart" @end="onDragEnd">
+    <draggable v-model="myArray" @start="onDragStart" @end="onDragEnd">
       <div
         v-for="(element, index) in myArray"
         :key="element.id"
         class="card"
+        @dragenter="dragEnter"
+        @dragleave="dragLeave"
       >
         <div v-if="isDragging && index === draggedIndex" class="ghost">
             <span class="card--number">{{ index + 1 }}</span>
             <img src="../assets/icons/plus.svg" alt="plus-icon" />
         </div>
-        <div v-else @dragleave="dragEnter">
+        <div >
           <img :src="element.photo" :alt="element.photo" class="card--image" />
           <span class="card--number">{{ index + 1 }}</span>
-          <img v-if="!isDragging" class="card--more" src="../assets/icons/more.svg">
+          <img v-if="!isChosen" class="card--more" src="../assets/icons/more.svg">
         </div>
       </div>
   </draggable>
@@ -38,12 +40,14 @@ export default {
         { id: 1, photo: require('@/assets/img1.jpeg') },
         { id: 2, photo: require('@/assets/img2.jpeg') },
         { id: 3, photo: require('@/assets/img3.jpeg') },
+        { id: 7, photo:require('@/assets/img6.jpeg') },
         { id: 4, photo: require('@/assets/img4.jpeg') },
+        { id: 8, photo: require('@/assets/img1.jpeg') },
         { id: 5, photo: require('@/assets/img5.jpeg') },
         { id: 6, photo:require('@/assets/img6.jpeg') },
+        { id: 9, photo: require('@/assets/img1.jpeg') },
+
       ],
-      dragOptions: {
-      },
       selectedCard: null,
       isDragging: false,
       isChosen: false,
@@ -56,10 +60,19 @@ export default {
     },
     onDragEnd() {
       this.isDragging = false;
+      this.isChosen = false
       this.draggedIndex = -1;
     },
-    dragEnter() {
-      this.isDragging = true;
+    dragEnter(evt) {
+      this.isChosen = true
+      if (evt.relatedTarget && !evt.currentTarget.contains(evt.relatedTarget)) {
+        this.isDragging = true;
+      }
+    },
+    dragLeave(evt) {
+      if (evt.relatedTarget === null || (evt.currentTarget && !evt.currentTarget.contains(evt.relatedTarget))) {
+        this.isDragging = false;
+      }
     },
   },
 };
@@ -80,8 +93,11 @@ export default {
   display: inline-block;
   text-align: center;
   background: #fff;
+  cursor: pointer;
 }
-
+.card:hover {
+  border: 1px solid #578FC7;
+}
 
 .card--image {
   width: 100%;
@@ -135,16 +151,14 @@ export default {
   cursor: pointer;
 }
 .sortable-chosen {
-  border: 1px solid #FF1919;
+  border: 1px solid #FF1919 !important;
 }
-.sortable-chosen .card--number {
-  display: none;
-}
+
 .sortable-chosen .card--more {
   display: none;
 }
 .sortable-chosen.sortable-ghost {
-  border: none;
+  border: none !important;
   transition: none;
 }
 
