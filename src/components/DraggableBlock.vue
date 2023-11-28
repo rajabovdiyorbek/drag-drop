@@ -107,7 +107,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .container {
   display: flex;
 }
@@ -123,51 +123,43 @@ export default {
   text-align: center;
   background: #fff;
   cursor: pointer;
-}
-.cards:hover {
-  border: 1px solid #578FC7;
+
+    &:hover {
+    border: 1px solid #578FC7;
+  }
 }
 
-.card--image {
+.card {
+  &--image {
   width: 100%;
   height: 144px;
   border-radius: 4px;
   object-fit: cover;
-}
-.card--image__add {
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 108px;
-  height: 144px;
-  border-radius: 4px;
-  border: 1px dashed #C4C9D4;
-  cursor: pointer;
-}
 
-.card--image__add:hover {
-  border-color: #578FC7;
-  color: #578FC7;
-}
+      &__add {
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      width: 108px;
+      height: 144px;
+      border-radius: 4px;
+      border: 1px dashed #C4C9D4;
+      cursor: pointer;
 
-.card--image__add:hover svg path {
-  fill: #578FC7;
-}
+      &:hover {
+        border-color: #578FC7;
+        color: #578FC7;
+      }
 
-.text {
-  text-align: center;
-  width: 60px ;
-  font-size: 13px;
-  font-weight: 500;
-}
+      &:hover svg path {
+        fill: #578FC7;
+      }
+    }
+  }
 
-.plus {
-  width: 14px;
-}
-
-.card--number {
+  &--number {
   position: absolute;
   width: 16px;
   top: 5px;
@@ -177,8 +169,8 @@ export default {
   padding: 4px;
   border-radius: 50%;
   font-size: 14px;
-}
-.card--more {
+  }
+  &--more {
   position: absolute;
   width: 20px;
   top: 5px;
@@ -187,30 +179,42 @@ export default {
   padding: 2px;
   font-size: 14px;
   cursor: pointer;
+  }
 }
-.sortable-chosen .card--more {
-  display: none;
+.text {
+  text-align: center;
+  width: 60px ;
+  font-size: 13px;
+  font-weight: 500;
+}
+.plus {
+  width: 14px;
 }
 .sortable-chosen {
-  border: 1px solid #FF1919 !important;
-}
+  border: 1px solid #ff1919 !important;
 
-.sortable-chosen .card--number {
-  display: none;
-}
-.sortable-chosen.sortable-ghost {
-  transform: none !important;
-  border: none !important;
-  transition: none;
-}
+  & .card--more {
+    display: none;
+  }
 
-.sortable-chosen.sortable-ghost .card {
-  opacity: 0.4;
-}
-.sortable-chosen.sortable-ghost .card--number {
-  display: block;
-}
+  & .card--number {
+    display: none;
+  }
 
+  &.sortable-ghost {
+    transform: none !important;
+    border: none !important;
+    transition: none;
+
+    .card {
+      opacity: 0.4;
+    }
+
+    .card--number {
+      display: block;
+    }
+  }
+}
 .ghost {
   background: white;
   position: absolute;
@@ -223,5 +227,4 @@ export default {
   border: 1px dashed #FF1919;
   z-index: 3;
 }
-
 </style>
