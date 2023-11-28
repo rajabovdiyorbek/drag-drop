@@ -1,39 +1,32 @@
 <template>
 <div class="container">
-    <draggable v-model="myArray" @start="onDragStart" @end="onDragEnd">
-      <div
-        v-for="(element, index) in myArray"
-        :key="element.id"
-        class="card"
-        @dragenter="dragEnter"
-        @dragleave="dragLeave"
-      >
-        <div v-if="isDragging && index === draggedIndex" class="ghost">
-            <span class="card--number">{{ index + 1 }}</span>
-            <img src="../assets/icons/plus.svg" alt="plus-icon" />
-        </div>
-        <div >
-          <img :src="element.photo" :alt="element.photo" class="card--image" />
-          <span class="card--number">{{ index + 1 }}</span>
-          <img v-if="!isChosen" class="card--more" src="../assets/icons/more.svg">
-        </div>
+  <div
+      v-for="(element, index) in myArray"
+      :key="element.id"
+      class="card"
+      :draggable="true"
+      @dragstart="dragStart($event, index)"
+      @dragend="dragEnd($event, index)"
+      @dragover="dragOver($event, index)"
+      @drop="drop($event, index)"
+    >
+      <div>
+        <img :src="element.photo" :alt="element.photo" class="card--image" />
+        <span class="card--number">{{ index + 1 }}</span>
+        <img class="card--more" src="../assets/icons/more.svg">
       </div>
-  </draggable>
-  <div class="card--image__add">
+    </div>
+    <div class="card--image__add">
       <img class="plus" src="../assets/icons/gray-plus.svg">
       <span class="text">Добавить фото</span>
   </div>
 </div>
 </template>
-
 <script>
-import draggable from 'vuedraggable';
 
 export default {
   name: 'DraggableBlock',
-  components: {
-    draggable,
-  },
+
   data() {
     return {
       myArray: [
@@ -46,35 +39,34 @@ export default {
         { id: 5, photo: require('@/assets/img5.jpeg') },
         { id: 6, photo:require('@/assets/img6.jpeg') },
         { id: 9, photo: require('@/assets/img1.jpeg') },
-
-      ],
-      selectedCard: null,
-      isDragging: false,
-      isChosen: false,
-      draggedIndex: -1,
+        ],
+      dragIndex: null,
     };
   },
   methods: {
-    onDragStart(evt) {
-      this.draggedIndex = evt.oldIndex;
+    dragStart(event, index) {
+      event.target.style.opacity = '0.4'
+      // setTimeout(function(){
+      //   event.currentTarget.classList.remove("dragging");
+      // }, 1);
+      this.dragIndex = index;
     },
-    onDragEnd() {
-      this.isDragging = false;
-      this.isChosen = false
-      this.draggedIndex = -1;
+    dragEnd(event) {
+      event.target.style.opacity = '1'
     },
-    dragEnter(evt) {
-      this.isChosen = true
-      if (evt.relatedTarget && !evt.currentTarget.contains(evt.relatedTarget)) {
-        this.isDragging = true;
+    dragOver (event, index) {
+      console.log(index === this.dragIndex)
+    },
+    drop(event, index) {
+      if (this.dragIndex !== null) {
+        const draggedElement = this.myArray[this.dragIndex];
+        this.myArray.splice(this.dragIndex, 1);
+        this.myArray.splice(index, 0, draggedElement);
+        this.dragIndex = null;
+        this.dragOverIndex = null;
       }
     },
-    dragLeave(evt) {
-      if (evt.relatedTarget === null || (evt.currentTarget && !evt.currentTarget.contains(evt.relatedTarget))) {
-        this.isDragging = false;
-      }
-    },
-  },
+  }
 };
 </script>
 
@@ -150,7 +142,7 @@ export default {
   font-size: 14px;
   cursor: pointer;
 }
-.sortable-chosen {
+.dragging {
   border: 1px solid #FF1919 !important;
 }
 
