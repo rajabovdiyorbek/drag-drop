@@ -16,7 +16,7 @@
         @dragover="dragOver"
       >
         <div v-if="isDragging && index === draggedIndex" class="ghost">
-          <span class="card--number">{{ index + 1 }}</span>
+          <span class="card--number">{{ element.order}}</span>
           <svg
             width="16"
             height="16"
@@ -42,7 +42,7 @@
         </div>
         <div class="card">
           <img :src="element.photo" :alt="element.photo" class="card--image" />
-          <span class="card--number">{{ index + 1 }}</span>
+          <span class="card--number">{{ element.order }}</span>
           <img
             v-if="!isChosen"
             class="card--more"
@@ -91,15 +91,15 @@ export default {
     return {
       startY: 0,
       myArray: [
-        { id: 1, photo: require("@/assets/img1.jpeg") },
-        { id: 2, photo: require("@/assets/img2.jpeg") },
-        { id: 3, photo: require("@/assets/img3.jpeg") },
-        { id: 7, photo: require("@/assets/img6.jpeg") },
-        { id: 4, photo: require("@/assets/img4.jpeg") },
-        { id: 8, photo: require("@/assets/img1.jpeg") },
-        { id: 5, photo: require("@/assets/img5.jpeg") },
-        { id: 6, photo: require("@/assets/img6.jpeg") },
-        { id: 9, photo: require("@/assets/img1.jpeg") },
+        { id: 1, order: 1, photo: require("@/assets/img1.jpeg") },
+        { id: 2, order: 2,  photo: require("@/assets/img2.jpeg") },
+        { id: 3, order: 3,  photo: require("@/assets/img3.jpeg") },
+        { id: 7, order: 4,  photo: require("@/assets/img6.jpeg") },
+        { id: 4, order: 5,  photo: require("@/assets/img4.jpeg") },
+        { id: 8, order: 6,  photo: require("@/assets/img1.jpeg") },
+        { id: 5, order: 7,  photo: require("@/assets/img5.jpeg") },
+        { id: 6, order: 8,  photo: require("@/assets/img6.jpeg") },
+        { id: 9, order: 9,  photo: require("@/assets/img1.jpeg") },
       ],
       dragOptions: {
         swapThreshold: 1,
@@ -120,10 +120,18 @@ export default {
       this.isDragging = false;
       this.isChosen = false;
       this.draggedIndex = -1;
+      this.myArray.sort((a, b) => a.order - b.order);
+      this.myArray = [...this.myArray];
     },
     onMove(evt) {
-      console.log(evt.draggedContext);
-      console.log(this.myArray[evt.draggedContext.index]);
+      const draggedIndex = this.draggedIndex;
+      const newIndex = evt.draggedContext.futureIndex;
+        const movedElements = this.myArray.splice(draggedIndex, 1);
+        this.myArray.splice(newIndex, 0, ...movedElements);
+        this.draggedIndex = newIndex;
+        this.myArray.forEach((element, index) => {
+          element.order = index + 1;
+        });
     },
     dragEnter(evt) {
       if (evt.relatedTarget && !evt.currentTarget.contains(evt.relatedTarget)) {
