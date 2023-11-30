@@ -16,7 +16,7 @@
         @dragover="dragOver"
       >
         <div v-if="isDragging && index === draggedIndex" class="ghost">
-          <span class="card--number">{{ element.order}}</span>
+          <span class="card--number">{{ draggedOrder }}</span>
           <svg
             width="16"
             height="16"
@@ -42,7 +42,7 @@
         </div>
         <div class="card">
           <img :src="element.photo" :alt="element.photo" class="card--image" />
-          <span class="card--number">{{ element.order }}</span>
+          <span class="card--number">{{ index + 1 }}</span>
           <img
             v-if="!isChosen"
             class="card--more"
@@ -108,6 +108,7 @@ export default {
       isDragging: false,
       isChosen: false,
       draggedIndex: -1,
+      draggedOrder: 1,
     };
   },
   methods: {
@@ -120,18 +121,10 @@ export default {
       this.isDragging = false;
       this.isChosen = false;
       this.draggedIndex = -1;
-      this.myArray.sort((a, b) => a.order - b.order);
-      this.myArray = [...this.myArray];
     },
     onMove(evt) {
-      const draggedIndex = this.draggedIndex;
       const newIndex = evt.draggedContext.futureIndex;
-        const movedElements = this.myArray.splice(draggedIndex, 1);
-        this.myArray.splice(newIndex, 0, ...movedElements);
-        this.draggedIndex = newIndex;
-        this.myArray.forEach((element, index) => {
-          element.order = index + 1;
-        });
+      this.draggedOrder = newIndex + 1;
     },
     dragEnter(evt) {
       if (evt.relatedTarget && !evt.currentTarget.contains(evt.relatedTarget)) {
