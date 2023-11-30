@@ -116,6 +116,7 @@ export default {
       this.isChosen = true;
       this.draggedIndex = evt.oldIndex;
       this.startY = evt.originalEvent.clientY;
+      this.draggedOrder = evt.oldIndex + 1
     },
     onDragEnd() {
       this.isDragging = false;
