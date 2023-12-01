@@ -11,7 +11,6 @@
         v-for="(element, index) in myArray"
         :key="element.id"
         class="cards"
-        @dragenter="dragEnter"
         @dragleave="dragLeave"
         @dragover="dragOver"
       >
@@ -91,18 +90,17 @@ export default {
     return {
       startY: 0,
       myArray: [
-        { id: 1, order: 1, photo: require("@/assets/img1.jpeg") },
-        { id: 2, order: 2,  photo: require("@/assets/img2.jpeg") },
-        { id: 3, order: 3,  photo: require("@/assets/img3.jpeg") },
-        { id: 7, order: 4,  photo: require("@/assets/img6.jpeg") },
-        { id: 4, order: 5,  photo: require("@/assets/img4.jpeg") },
-        { id: 8, order: 6,  photo: require("@/assets/img1.jpeg") },
-        { id: 5, order: 7,  photo: require("@/assets/img5.jpeg") },
-        { id: 6, order: 8,  photo: require("@/assets/img6.jpeg") },
-        { id: 9, order: 9,  photo: require("@/assets/img1.jpeg") },
+        { id: 1, photo: require("@/assets/img1.jpeg") },
+        { id: 2, photo: require("@/assets/img2.jpeg") },
+        { id: 3, photo: require("@/assets/img3.jpeg") },
+        { id: 7, photo: require("@/assets/img6.jpeg") },
+        { id: 4, photo: require("@/assets/img4.jpeg") },
+        { id: 8, photo: require("@/assets/img1.jpeg") },
+        { id: 5, photo: require("@/assets/img5.jpeg") },
+        { id: 6, photo: require("@/assets/img6.jpeg") },
+        { id: 9, photo: require("@/assets/img1.jpeg") },
       ],
       dragOptions: {
-        swapThreshold: 1,
         animation: 150,
       },
       isDragging: false,
@@ -127,17 +125,11 @@ export default {
       const newIndex = evt.draggedContext.futureIndex;
       this.draggedOrder = newIndex + 1;
     },
-    dragEnter(evt) {
-      if (evt.relatedTarget && !evt.currentTarget.contains(evt.relatedTarget)) {
-        this.isDragging = true;
-      }
-    },
     dragOver(evt) {
       if (evt.clientY - this.startY > 40) {
         this.isDragging = true;
       }
     },
-
     dragLeave(evt) {
       if (
         evt.relatedTarget === null ||
