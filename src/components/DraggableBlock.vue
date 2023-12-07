@@ -117,7 +117,6 @@ export default {
       this.isDragging = false;
       this.isChosen = false;
       this.draggedIndex = -1;
-      console.log(this.myArray);
     },
     onMove(evt) {
       const movedElement = this.myArray[evt.draggedContext.index];
