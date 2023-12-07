@@ -41,7 +41,7 @@
         </div>
         <div class="card">
           <img :src="element.photo" :alt="element.photo" class="card--image" />
-          <span class="card--number">{{ index + 1 }}</span>
+          <span class="card--number">{{ element.order }}</span>
           <img
             v-if="!isChosen"
             class="card--more"
@@ -90,15 +90,12 @@ export default {
     return {
       startY: 0,
       myArray: [
-        { id: 1, photo: require("@/assets/img1.jpeg") },
-        { id: 2, photo: require("@/assets/img2.jpeg") },
-        { id: 3, photo: require("@/assets/img3.jpeg") },
-        { id: 7, photo: require("@/assets/img6.jpeg") },
-        { id: 4, photo: require("@/assets/img4.jpeg") },
-        { id: 8, photo: require("@/assets/img1.jpeg") },
-        { id: 5, photo: require("@/assets/img5.jpeg") },
-        { id: 6, photo: require("@/assets/img6.jpeg") },
-        { id: 9, photo: require("@/assets/img1.jpeg") },
+        { id: 1, order: 1, photo: require("@/assets/img1.jpeg") },
+        { id: 2, order: 2,  photo: require("@/assets/img2.jpeg") },
+        { id: 3, order: 3,  photo: require("@/assets/img3.jpeg") },
+        { id: 4, order: 4,  photo: require("@/assets/img4.jpeg") },
+        { id: 5, order: 5,  photo: require("@/assets/img5.jpeg") },
+        { id: 6, order: 6,  photo: require("@/assets/img6.jpeg") },
       ],
       dragOptions: {
         animation: 150,
@@ -120,12 +117,33 @@ export default {
       this.isDragging = false;
       this.isChosen = false;
       this.draggedIndex = -1;
+      console.log(this.myArray);
     },
     onMove(evt) {
+      const draggedIndex = evt.draggedContext.index;
       const newIndex = evt.draggedContext.futureIndex;
-      this.draggedOrder = newIndex + 1;
-    },
-    dragOver(evt) {
+      const movedElement = this.myArray[draggedIndex];
+      const startOrder = movedElement.order;
+      const endOrder = newIndex + 1;
+
+      this.myArray.forEach((item) => {
+        const itemOrder = item.order;
+
+        if (item !== movedElement) {
+          const isBetweenOrders = startOrder < endOrder
+            ? itemOrder > startOrder && itemOrder <= endOrder
+            : itemOrder < startOrder && itemOrder >= endOrder;
+
+          if (isBetweenOrders) {
+            item.order = startOrder < endOrder ? itemOrder - 1 : itemOrder + 1;
+          }
+        }
+      });
+
+      movedElement.order = endOrder;
+      this.draggedOrder = endOrder;
+},
+      dragOver(evt) {
       if (evt.clientY - this.startY > 40) {
         this.isDragging = true;
       }
