@@ -120,15 +120,12 @@ export default {
       console.log(this.myArray);
     },
     onMove(evt) {
-      const draggedIndex = evt.draggedContext.index;
-      const newIndex = evt.draggedContext.futureIndex;
-      const movedElement = this.myArray[draggedIndex];
+      const movedElement = this.myArray[evt.draggedContext.index];
       const startOrder = movedElement.order;
-      const endOrder = newIndex + 1;
+      const endOrder = evt.draggedContext.futureIndex + 1;
 
       this.myArray.forEach((item) => {
         const itemOrder = item.order;
-
         if (item !== movedElement) {
           const isBetweenOrders = startOrder < endOrder
             ? itemOrder > startOrder && itemOrder <= endOrder
